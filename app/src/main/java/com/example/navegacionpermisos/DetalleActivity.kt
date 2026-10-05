@@ -5,44 +5,37 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-
-// Importaciones
-import android.widget.TextView
-import android.widget.Button
+import com.example.navegacionpermisos.databinding.ActivityDetalleBinding
 
 class DetalleActivity : AppCompatActivity() {
 
-    private lateinit var tvDatoRecibido: TextView
-    private lateinit var btnVolver: Button
+    private lateinit var binding: ActivityDetalleBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_detalle)
+
+        // Inicializar ViewBinding
+        binding = ActivityDetalleBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-    }
-    // Ir a buscar los elementos a la UI
-    private fun initViews() {
-        tvDatoRecibido = findViewById(R.id.tvDatoRecibido)
-        btnVolver = findViewById(R.id.btnVolver)
-    }
-    // Escuchar los eventos de boton Volver
-    private fun setupListeners() {
-        btnVolver.setOnClickListener {
-            finish() // Cierra esta Activity y vuelve a la anterior
-        }
-    }
-    // Mostrar el valor recibido
-    private fun mostrarDatoRecibido() {
-        val datoRecibido = intent.getStringExtra("DATO_ENVIADO")
-        if (datoRecibido != null) {
-            tvDatoRecibido.text = "Dato recibido: $datoRecibido"
+
+        // 2. Agregar Nueva Activity (Código exacto de la Lámina 2 del PDF)
+        val recibido = intent.getStringExtra(MainActivity.EXTRA_TEXTO).orEmpty()
+        binding.txtDetalle.text = if (recibido.isNotEmpty()) {
+            "Dato recibido: $recibido"
         } else {
-            tvDatoRecibido.text = "No se recibió ningún dato"
+            "No se recibió ningún dato"
+        }
+
+        // Botón para volver a la pantalla anterior
+        binding.btnVolver.setOnClickListener {
+            finish()
         }
     }
 }
